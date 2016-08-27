@@ -15,19 +15,19 @@ db.once('open', function() {
 });
 
 app.use(bodyParser.json());
-
 app.use(methodOverride('X-HTTP-Method-Override'))
-
 app.use(express.static(__dirname + '/public'));
-
+app.use(bodyParser.urlencoded({'extended': 'true'}));
+app.use(bodyParser.json({type: 'application/vnd.api+json'}));
 
 // schema definition
 var userSchema = mongoose.Schema({
-  name: String
+  name: String,
+  email: String
 });
 
 // create a modal with the userSchema schema
-var User = mongoose.model('users', userSchema);
+var Users = mongoose.model('users', userSchema);
 
 app.get('/', function (req, res) {
   res.send('index.html');
@@ -35,7 +35,7 @@ app.get('/', function (req, res) {
 
 // get all users
 app.get('/users', function (req, res) {
-  User.find(function (err, users) {
+  Users.find(function (err, users) {
     if (err)
       res.send(err);
 
@@ -45,7 +45,7 @@ app.get('/users', function (req, res) {
 
 // get specific user via id
 app.get('/users/:id', function (req, res) {
-  User.findOne({
+  Users.findOne({
     _id: req.params.id
   }, function (err, user) {
     if (err)
@@ -53,6 +53,24 @@ app.get('/users/:id', function (req, res) {
 
     res.json(user);
   })
+});
+
+// create new user
+app.post('/users', function (req, res) {
+  Users.create({
+    name: req.body.name,
+    email: req.body.email
+  }, function (err, user) {
+    if (err)
+      res.send(err);
+
+    Users.find(function (err, users) {
+      if (err)
+        res.send(err);
+
+      res.json(users);
+    })
+  });
 });
 
 app.listen(port, function () {
