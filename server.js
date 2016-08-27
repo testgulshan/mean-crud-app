@@ -23,7 +23,7 @@ app.use(bodyParser.json({type: 'application/vnd.api+json'}));
 // schema definition
 var userSchema = mongoose.Schema({
   name: String,
-  email: String
+  city: String
 });
 
 // create a modal with the userSchema schema
@@ -59,7 +59,7 @@ app.get('/users/:id', function (req, res) {
 app.post('/users', function (req, res) {
   Users.create({
     name: req.body.name,
-    email: req.body.email
+    city: req.body.city
   }, function (err, user) {
     if (err)
       res.send(err);
@@ -72,6 +72,23 @@ app.post('/users', function (req, res) {
     })
   });
 });
+
+// delete an existing user
+app.delete('/users/:id', function (req, res) {
+  Users.remove({
+    _id: req.params.id
+  }, function (err, user) {
+    if (err)
+      res.send(err)
+
+    Users.find(function (err, users) {
+      if(err)
+        res.send(err)
+
+      res.send(users);
+    })
+  })
+})
 
 app.listen(port, function () {
   console.log('server is running on http://localhost:' + port);
