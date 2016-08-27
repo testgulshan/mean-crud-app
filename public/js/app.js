@@ -13,6 +13,9 @@ angular.module('meanAuth', ['ngRoute'])
         templateUrl: 'views/signup.html',
         controller: 'SignupCtrl'
       })
+      .otherwise({
+        templateUrl: 'views/404.html'
+      })
   })
 
   // home page
