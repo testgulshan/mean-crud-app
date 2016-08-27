@@ -35,27 +35,23 @@ app.get('/', function (req, res) {
 
 // get all users
 app.get('/users', function (req, res) {
-  User.find({})
-    .exec(function (err, users) {
-      if (err) {
-        res.send('error has occurred')
-      } else {
-        res.json(users)
-      }
-    });
+  User.find(function (err, users) {
+    if (err)
+      res.send(err);
+
+    res.json(users);
+  });
 });
 
 // get specific user via id
 app.get('/users/:id', function (req, res) {
   User.findOne({
     _id: req.params.id
-  })
-  .exec(function (err, user) {
-    if (err) {
-      res.send('error occurred')
-    } else {
-      res.json(user);
-    }
+  }, function (err, user) {
+    if (err)
+      res.send('error occurred');
+
+    res.json(user);
   })
 });
 
