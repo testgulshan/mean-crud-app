@@ -10,3 +10,7 @@ main {
 .border-box h2 {
   margin-top: auto;
 }
+
+.btn-success {
+  border: none;
+}

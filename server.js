@@ -30,7 +30,8 @@ app.use(bodyParser.json({type: 'application/vnd.api+json'}));
 var userSchema = mongoose.Schema({
   fname: String,
   lname: String,
-  email: String
+  email: String,
+  city: String
 });
 
 // create a modal with the userSchema schema
@@ -95,6 +96,19 @@ app.delete('/api/users/:id', function (req, res) {
 
       res.send(users);
     })
+  })
+})
+
+// update an existing user
+app.put('/api/users/:id', function (req, res) {
+  var query ={_id: req.params.id};
+  var updates = req.body;
+
+  Users.findOneAndUpdate(query, {$set: updates}, {upsert: true}, function (err, users) {
+    if(err)
+      res.send(err)
+
+    res.send(users);
   })
 })
 

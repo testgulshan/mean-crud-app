@@ -75,14 +75,41 @@ angular.module('meanAuth', ['ngRoute'])
         $scope.users = response.data;
       }, function (response) {
         $scope.users = 'Something went wrong';
-        console.log($scope.content)
       })
 
     $scope.deleteUser = function (id) {
       $http.delete('/api/users/' + id)
         .success(function (data) {
           $scope.users = data;
-          console.log(data);
+        })
+        .error(function (data) {
+          console.log('Error: ' + data);
+        });
+    }
+
+    $scope.editUser = function (id) {
+      $scope.editView = true;
+      $http.get('/api/users/' + id)
+        .success(function (response) {
+          $scope.user = response;
+        });
+    }
+
+    $scope.updateUser = function (id) {
+      var updates = {
+        fname: $scope.user.fname,
+        lname: $scope.user.lname,
+        email: $scope.user.email,
+        city: $scope.user.city
+      }
+      $http.put('/api/users/' + id, updates)
+        .success(function (data) {
+          $scope.editView = false;
+          $scope.user = '';
+          $http.get('/api/users')
+            .then(function (response) {
+              $scope.users = response.data;
+            })
         })
         .error(function (data) {
           console.log('Error: ' + data);
