@@ -15,15 +15,22 @@ db.once('open', function() {
 });
 
 app.use(bodyParser.json());
-app.use(methodOverride('X-HTTP-Method-Override'))
+// app.use(methodOverride('X-HTTP-Method-Override'))
+app.use(methodOverride());
 app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.urlencoded({'extended': 'true'}));
 app.use(bodyParser.json({type: 'application/vnd.api+json'}));
 
+
+// configuration ===========
+// app.use(morgan('dev'));
+
+
 // schema definition
 var userSchema = mongoose.Schema({
-  name: String,
-  city: String
+  fname: String,
+  lname: String,
+  email: String
 });
 
 // create a modal with the userSchema schema
@@ -34,7 +41,7 @@ app.get('/', function (req, res) {
 });
 
 // get all users
-app.get('/users', function (req, res) {
+app.get('/api/users', function (req, res) {
   Users.find(function (err, users) {
     if (err)
       res.send(err);
@@ -44,7 +51,7 @@ app.get('/users', function (req, res) {
 });
 
 // get specific user via id
-app.get('/users/:id', function (req, res) {
+app.get('/api/users/:id', function (req, res) {
   Users.findOne({
     _id: req.params.id
   }, function (err, user) {
@@ -56,10 +63,11 @@ app.get('/users/:id', function (req, res) {
 });
 
 // create new user
-app.post('/users', function (req, res) {
+app.post('/api/users', function (req, res) {
   Users.create({
-    name: req.body.name,
-    city: req.body.city
+    fname: req.body.fname,
+    lname: req.body.lname,
+    email: req.body.email
   }, function (err, user) {
     if (err)
       res.send(err);
@@ -74,7 +82,7 @@ app.post('/users', function (req, res) {
 });
 
 // delete an existing user
-app.delete('/users/:id', function (req, res) {
+app.delete('/api/users/:id', function (req, res) {
   Users.remove({
     _id: req.params.id
   }, function (err, user) {

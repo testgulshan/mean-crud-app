@@ -1,0 +1,12 @@
+<div class="col-md-12">
+  <h2>{{title}}</h2>
+  <hr>
+  <ul class="list-unstyled">
+    <li ng-repeat="user in users">
+      <button class="btn btn-success pull-right" ng-click="deleteUser(user._id)" class="pull-right">&times;</button>
+      <p><strong>{{user.fname}} {{user.lname}}</strong><br>
+      <a href="mailto:{{user.email}}">{{user.email}}</a></p>
+      <br>
+    </li>
+  </ul>
+</div>
